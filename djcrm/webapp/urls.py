@@ -1,6 +1,9 @@
 from django.urls import path
-from . import views
+from .views import lead_detail, lead_list
+
+app_name = "webapp"
 
 urlpatterns = [
-    path("", views.home, name=""),
+    path("", lead_list),
+    path("<pk>", lead_detail),
 ]
