@@ -117,4 +117,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "webapp.user"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 LOGIN_REDIRECT_URL = "/webapp"
+LOGIN_URL = "/login"
