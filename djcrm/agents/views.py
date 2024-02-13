@@ -1,6 +1,8 @@
-from typing import Any
+import random
+
 from django.urls import reverse
 from django.views import generic
+from django.core.mail import send_mail
 from .mixins import OrganisorAndLoginRequiredMixin
 from webapp.models import Agent
 from .forms import AgentModelForm
@@ -22,9 +24,18 @@ class AgentCreateView(OrganisorAndLoginRequiredMixin, generic.CreateView):
         return reverse("agents:agent-list")
 
     def form_valid(self, form):
-        agent = form.save(commit=False)
-        agent.org = self.request.user.userprofile
-        agent.save()
+        user = form.save(commit=False)
+        user.is_agent = True
+        user.is_organisor = False
+        user.set_password(f"{random.randint(0, 1000000)}")
+        user.save()
+        Agent.objects.create(user=user, org=self.request.user.userprofile)
+        send_mail(
+            subject="You are invited to be an agent.",
+            message="You were added as an agent on Django CRM. Please, come login to start working.",
+            from_email="admin@email.com",
+            recipient_list = [user.email]
+        )
         return super(AgentCreateView, self).form_valid(form)
 
 
